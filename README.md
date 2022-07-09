@@ -32,7 +32,7 @@ yarn start
 
 ## Live Demo
 
-Click [here](https://atlan-sql-harshaktg.vercel.app/) to view live demo of the app.
+Click [here](https://lyric-grid.vercel.app/) to view live demo of the app.
 <br/><br/>
 
 ### TO DO
