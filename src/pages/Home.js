@@ -3,16 +3,23 @@ import { TABLE_DATA } from 'config/constants';
 import useLocalStorage from 'hooks/useLocalStorage';
 import AppLayout from 'layouts/AppLayout';
 import moment from 'moment';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import HistorySheet from 'sheets/HistorySheet';
 
 function Home() {
   const [data, setData] = useLocalStorage('tableData', TABLE_DATA);
   const [history, setHistory] = useLocalStorage('tableHistory', []);
 
+  const [filteredData, setFilteredData] = useState([]);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const columns = useMemo(() => Object.keys(data?.[0] || {}), []);
+
+  useEffect(() => {
+    const updatedData = JSON.parse(JSON.stringify(data));
+    setFilteredData(updatedData);
+  }, []);
 
   const updateTable = (coords, newValue) => {
     const { x, y } = coords;
@@ -27,6 +34,18 @@ function Home() {
     setHistory(updatedHistory);
   };
 
+  const handleSearchChange = useCallback((searchTerm) => {
+    const updatedFilteredData = data.filter((entry) => {
+      const values = Object.values(entry);
+      for (let i = 0; i < values.length; i++) {
+        if (values[i].toLowerCase().includes(searchTerm.toLowerCase())) {
+          return true;
+        }
+      }
+    });
+    setFilteredData(updatedFilteredData);
+  }, []);
+
   return (
     <AppLayout>
       <header className="mb-8">
@@ -40,12 +59,16 @@ function Home() {
       </header>
       <div className="card">
         <div className="flex justify-between mb-5">
-          <SearchInput onChange={console.log} />
+          <SearchInput onChange={handleSearchChange} />
           <Button icon="history" onClick={() => setIsOpen(!isOpen)}>
             History
           </Button>
         </div>
-        <DataGrid data={data} updateTable={updateTable} columns={columns} />
+        <DataGrid
+          data={filteredData}
+          updateTable={updateTable}
+          columns={columns}
+        />
       </div>
       <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} position="right">
         <HistorySheet onClose={() => setIsOpen(false)} />
