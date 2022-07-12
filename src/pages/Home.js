@@ -38,8 +38,8 @@ function Home() {
     const updatedFilteredData = data.filter((entry) => {
       const values = Object.values(entry);
       for (let i = 0; i < values.length; i++) {
-        console.log('VALUES ', values);
-        if (values[i]?.toLowerCase().includes(searchTerm.toLowerCase())) {
+        // console.log('VALUES ', values);
+        if (`${values[i]}`?.toLowerCase().includes(searchTerm.toLowerCase())) {
           return true;
         }
       }
