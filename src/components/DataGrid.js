@@ -45,7 +45,7 @@ function DataGrid({ data, updateTable, columns }) {
         {data.map((row, ind) => (
           <tr
             key={ind}
-            className={`h-15 transition-colors delay-75 ease-in-out ${
+            className={`h-15 ease-in-out ${
               selectedCell?.x !== `${ind}` &&
               'hover:bg-primary-color hover:bg-opacity-80 hover:text-white'
             }`}
