@@ -3,23 +3,23 @@ import { TABLE_DATA } from 'config/constants';
 import useLocalStorage from 'hooks/useLocalStorage';
 import AppLayout from 'layouts/AppLayout';
 import moment from 'moment';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import HistorySheet from 'sheets/HistorySheet';
 
 function Home() {
   const [data, setData] = useLocalStorage('tableData', TABLE_DATA);
   const [history, setHistory] = useLocalStorage('tableHistory', []);
 
-  const [filteredData, setFilteredData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredData = useMemo(() => {
+    if (!searchTerm) return data;
+    return getFilteredResults(searchTerm);
+  }, [searchTerm, data]);
 
   const [isOpen, setIsOpen] = useState(false);
 
   const columns = useMemo(() => Object.keys(data?.[0] || {}), []);
-
-  useEffect(() => {
-    const updatedData = JSON.parse(JSON.stringify(data));
-    setFilteredData(updatedData);
-  }, []);
 
   const updateTable = (coords, newValue) => {
     const { x, y } = coords;
@@ -34,7 +34,7 @@ function Home() {
     setHistory(updatedHistory);
   };
 
-  const handleSearchChange = useCallback((searchTerm) => {
+  function getFilteredResults(searchTerm) {
     const updatedFilteredData = data.filter((entry) => {
       const values = Object.values(entry);
       for (let i = 0; i < values.length; i++) {
@@ -44,7 +44,11 @@ function Home() {
         }
       }
     });
-    setFilteredData(updatedFilteredData);
+    return updatedFilteredData;
+  }
+
+  const handleSearchChange = useCallback((searchTerm) => {
+    setSearchTerm(searchTerm);
   }, []);
 
   return (

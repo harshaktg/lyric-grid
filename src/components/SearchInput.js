@@ -10,7 +10,7 @@ function SearchInput({ icon = 'search', onChange }) {
 
   useEffect(() => {
     onChange && onChange(search);
-  }, [search, onChange]);
+  }, [search]);
 
   return (
     <div className="h-7.5 border-black border-opacity-20 w-96 border rounded-5 flex items-center">

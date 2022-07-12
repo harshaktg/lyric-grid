@@ -21,7 +21,7 @@ function DataGrid({ data, updateTable, columns }) {
   const updateCell = (e) => {
     const isSameData =
       currentCellContent === data[selectedCell.x][columns[selectedCell.y]];
-    if (currentCellContent.trim() || !isSameData) {
+    if (currentCellContent.trim() && !isSameData) {
       updateTable(selectedCell, currentCellContent);
     }
     setSelectedCell(null);
